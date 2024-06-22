@@ -25,7 +25,7 @@ export default {
     };
   },
   methods: {
-    async creat2ePoint() {
+    async createPoint() {
       this.loading = true;
       this.error = null;
       axios
