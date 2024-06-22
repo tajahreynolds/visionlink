@@ -20,3 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/points', [PointController::class, 'index']);
+Route::post('/points', [PointController::class, 'store']);
+Route::get('/points/{id}', [PointController::class, 'info']);
+Route::put('/points/{id}', [PointController::class, 'update']);
+Route::delete('/points/{id}', [PointController::class, 'destroy']);
