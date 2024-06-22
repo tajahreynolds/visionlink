@@ -3,14 +3,16 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import VueRouter from 'vue-router'
-import axios from 'axios'
-import HomeView from './components/HomeView.vue';
-require('./bootstrap');
+import VueRouter from "vue-router";
+import axios from "axios";
+import "./bootstrap";
+import HomeView from "./components/HomeView.vue";
+import EditPointView from "./components/EditPointView.vue";
+import NewPointView from "./components/NewPointView.vue";
 
-window.Vue = require('vue').default;
-Vue.use(VueRouter)
-Vue.prototype.$http = axios
+window.Vue = require("vue").default;
+Vue.use(VueRouter);
+Vue.prototype.$http = axios;
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,13 +31,15 @@ Vue.prototype.$http = axios
  */
 
 const router = new VueRouter({
-    mode: 'history',
-    routes: [
-        { path: '/', component: HomeView },
-    ]
-})
+  mode: "history",
+  routes: [
+    { path: "/", component: HomeView },
+    { path: "/point/:id", name: "EditPoint", component: EditPointView, props: true },
+    { path: "/newPoint", name: "NewPoint", component: NewPointView },
+  ],
+});
 
 const app = new Vue({
-    el: '#app',
-    router
+  el: "#app",
+  router,
 });
