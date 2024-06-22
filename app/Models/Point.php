@@ -12,6 +12,10 @@ class Point extends Model
     // define the table
     protected $table = 'point';
 
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      * 

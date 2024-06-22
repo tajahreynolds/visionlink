@@ -18,7 +18,6 @@ class CreatePointTable extends Migration
             $table->string('name');
             $table->integer('x');
             $table->integer('y');
-            $table->timestamps();
         });
     }
 
