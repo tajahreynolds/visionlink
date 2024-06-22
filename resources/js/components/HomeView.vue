@@ -1,49 +1,63 @@
+<template>
+  <div class="container">
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <div
+      v-else
+      id="points"
+    >
+      <h1>Points</h1>
+      <ul>
+        <li
+          v-for="point in points"
+          :key="point.id"
+        >
+          <router-link :to="{ name: 'EditPoint', params: { id: point.id } }">
+            {{ point.name }}: {{ point.x }}, {{ point.y }}
+          </router-link>
+        </li>
+      </ul>
+      <button v-on:click="gotoNewPointView">New</button>
+    </div>
+  </div>
+</template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-    setup() {
-        const data = ref([]);
-        const loading = ref(true);
-        const error = ref(null);
-
-        const fetchData = async () => {
-            try {
-                const response = await axios.get("http://localhost:8000/api/points");
-                data.value = response.data;
-                console.log(data);
-            } catch (err) {
-                error.value = 'Failed to fetch data';
-            } finally {
-                loading.value = false;
-            }
-        };
-
-        onMounted(() => {
-            fetchData();
-        });
-
-        return {
-            data,
-            loading,
-            error,
-        };
+  data() {
+    return {
+      points: [],
+      loading: true,
+      error: null,
+    };
+  },
+  methods: {
+    async fetchData() {
+      try {
+        const response = await axios.get("http://localhost:8000/api/points");
+        this.points = response.data;
+        this.error = null;
+      } catch (err) {
+        this.error = "Failed to fetch data";
+      } finally {
+        this.loading = false;
+      }
     },
+    gotoNewPointView() {
+      this.$router.push('/newPoint');
+    },
+  },
+  mounted() {
+    this.fetchData();
+  },
 };
 </script>
 
-<template>
-    <div class="container">
-        <div v-if="loading">Loading...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <h1>Points</h1>
-            <ul>
-                <li v-for="point in data" :key="point.id">{{ point.name }}: {{ point.x }}, {{ point.y }}</li>
-            </ul>
-        </div>
-    </div>
-</template>
-
+<style scoped>
+#points > h1 {
+  text-align: center;
+  margin-top: 24px;
+}
+</style>
