@@ -7,17 +7,28 @@
       id="points"
     >
       <h1>Points</h1>
-      <ul>
-        <li
-          v-for="point in points"
-          :key="point.id"
-        >
-          <router-link :to="{ name: 'EditPoint', params: { id: point.id } }">
-            {{ point.name }}: {{ point.x }}, {{ point.y }}
-          </router-link>
-        </li>
-      </ul>
-      <button v-on:click="gotoNewPointView">New</button>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th class="text-center" scope="col">X</th>
+            <th class="text-center" scope="col">Y</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="point in points"
+            :key="point.id"
+          >
+            <router-link :to="{ name: 'EditPoint', params: { id: point.id } }">
+              <th scope="row">{{ point.name }}</th>
+              <td class="text-center">{{ point.x }}</td>
+              <td class="text-center">{{ point.y }}</td>
+            </router-link>
+          </tr>
+        </tbody>
+      </table>
+      <button v-on:click="gotoNewPointView" class="btn btn-primary">New</button>
     </div>
   </div>
 </template>
@@ -60,4 +71,37 @@ export default {
   text-align: center;
   margin-top: 24px;
 }
+
+button {
+  margin: 8px 0 0 10%;
+}
+
+a {
+  display: contents;
+}
+
+.text-center {
+  text-align: center;
+}
+
+table {
+  margin: auto;
+  width: 80%;
+  border-spacing: collapse;
+  border: 2px solid rgb(140 140 140);
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+th,
+td {
+  border: 1px solid rgb(160 160 160);
+  padding: 8px 10px;
+}
+
+tbody > tr:hover {
+ background-color: lightgray
+}
+
 </style>
