@@ -12,6 +12,7 @@
         <button v-on:click="cancel" type="button">Cancel</button>
       </form>
     </div>
+    <relative-points :point="point"></relative-points>
   </div>
 </template>
 

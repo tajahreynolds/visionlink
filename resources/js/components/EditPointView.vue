@@ -12,11 +12,29 @@
         </div>
         <div style="display: flexbox">
           <button type="submit">Save</button>
-          <button type="button" v-on:click="deletePoint">Delete</button>
-          <button type="button" v-on:click="cancel" style="float: right; margin-left: 4px">Cancel</button>
-          <button type="reset" v-on:click="fetchPointData" style="float: right">Restore</button>
+          <button
+            type="button"
+            v-on:click="deletePoint"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            v-on:click="cancel"
+            style="float: right; margin-left: 4px"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            v-on:click="restore"
+            style="float: right"
+          >
+            Restore
+          </button>
         </div>
       </form>
+      <relative-points :point="point"></relative-points>
     </div>
   </div>
 </template>
@@ -31,8 +49,7 @@ export default {
   data() {
     return {
       point: null,
-      nearestPoints: [],
-      farthestPoints: [],
+      originalPoint: null,
       loading: true,
       error: null,
     };
@@ -44,7 +61,8 @@ export default {
       axios
         .get(`http://localhost:8000/api/points/${this.id}`)
         .then((res) => {
-          this.point = res.data.point;
+          this.point = res.data;
+          this.originalPoint = { ...res.data };
         })
         .catch((err) => {
           console.error(err);
@@ -83,11 +101,16 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.error === null && this.$router.push("/");
+          if (this.error === null) {
+            this.$router.push("/");
+          }
         });
     },
     cancel() {
       this.$router.push("/");
+    },
+    restore() {
+      this.point = { ...this.originalPoint };
     },
   },
   mounted() {
