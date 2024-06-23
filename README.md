@@ -24,7 +24,7 @@ Requirements:
 4. Install npm dependencies with `npm install`
 5. Set the application key with `php artisan key:generate`
 6. Build the project with `npm run dev`
-7. Start the applciation with `php artisan serve`
+7. Start the application with `php artisan serve`
 
 That's it! You can now visit http://localhost:8000 in your browser to interact with the app.
 
