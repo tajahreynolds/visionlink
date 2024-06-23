@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class PointController extends Controller
 {
+    // function to get all points from database
     public function index() {
         // fetch all points from the database
         $points = Point::all();
@@ -16,17 +17,16 @@ class PointController extends Controller
         return response()->json($points);
     }
 
+    // function to get information about a point with the given id
     public function info($id) {
         $point = Point::findOrFail($id);
-        $nearest = $this->getNearest($point);
-        $farthest = $this->getFarthest($point);
-        $data = array("point" => $point, "nearest" => $nearest, "farthest" => $farthest);
-        return response()->json($data);
+        return response()->json($point);
     }
 
+    // function to create a point
     public function store(Request $request) {
         $validatedData = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:point',
             'x' => 'required|integer',
             'y' => 'required|integer',
         ]);
@@ -34,10 +34,11 @@ class PointController extends Controller
         return response()->json($point);
     }
 
+    // function to update a given point by id
     public function update(Request $request, $id) {
         $point = Point::findOrFail($id);
         $validatedData = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:point',
             'x' => 'required|integer',
             'y' => 'required|integer',
         ]);
@@ -45,22 +46,11 @@ class PointController extends Controller
         return response()->json($point);
     }
 
+    // function to delete a given point by id
     public function destroy($id) {
         $point = Point::findOrFail($id);
         $point->delete();
         $data = array("message" => "deleted");
         return response()->json($data);
-    }
-
-    private function getNearest(Point $point) {
-        // todo replace data with nearest points
-        $data = array($point, $point);
-        return $data;
-    }
-
-    private function getFarthest(Point $point) {
-        // todo replace data with farthes points
-        $data = array($point, $point, $point);
-        return $data;
     }
 }
