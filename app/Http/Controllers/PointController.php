@@ -38,10 +38,22 @@ class PointController extends Controller
     public function update(Request $request, $id) {
         $point = Point::findOrFail($id);
         $validatedData = $request->validate([
-            'name' => 'required|string|unique:point',
+            'name' => 'required|string',
             'x' => 'required|integer',
             'y' => 'required|integer',
         ]);
+        $existingPoint = Point::where('name', $validatedData['name'])->get();
+        foreach ($existingPoint as $other) {
+            if ($other->id != $point->id) {
+                return response()->json(
+                    [
+                        'message' => 'The given data was invalid.',
+                        'errors' => ['name' => ['The name has already been taken.']]
+                    ],
+                    422
+                );
+            }
+        }
         $point->update($validatedData);
         return response()->json($point);
     }
