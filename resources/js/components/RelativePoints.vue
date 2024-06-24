@@ -9,9 +9,15 @@
 
     <div
       v-else-if="error"
-      class="mt-5 text-center text-danger"
+      class="mt-5 text-center"
     >
-      {{ error }}
+        <p class="text-danger">{{ error.message }}</p>
+        <p
+          v-for="err in error.errors"
+          class="text-danger"
+        >
+          {{ err[0] }}
+        </p>
     </div>
 
     <div
@@ -120,15 +126,15 @@ export default {
         .get(`http://localhost:8000/api/points`)
         .then((res) => {
           this.otherPoints = res.data.filter(
-            (other) => other.id != this.point.id
+            (other) => other.id !== this.point.id
           );
         })
         .catch((err) => {
-          console.error(err);
-          this.error = "Failed to fetch other points";
+          this.error = err.response.data;
         })
         .finally(() => {
           this.loading = false;
+          this.$emit('loaded-other-points', this.otherPoints);
         });
     },
     distanceBetween(point, other) {
