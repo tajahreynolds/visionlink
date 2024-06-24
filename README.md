@@ -45,7 +45,7 @@ CREATE TABLE point (
 If you do not have a `point` table in your database, you can create one by running the command
 
 ```
-php artisan migrate --seed
+npm run database
 ```
 
 This will create a table named `point` in your database with sample data to get you started.
