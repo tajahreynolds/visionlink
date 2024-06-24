@@ -46,6 +46,9 @@ export default {
     points: Array,
     editable: Boolean,
   },
+  mounted() {
+    this.points.sort((a, b) => a.name.localeCompare(b.name));
+  }
 };
 </script>
 
