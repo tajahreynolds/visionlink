@@ -24,54 +24,58 @@
         v-if="point"
         @submit.prevent="onSubmit"
       >
-          <div class="form-group row">
-            <label
-              for="pointName"
-              class="col-2 col-form-label"
-              >Name</label
-            >
-            <div class="col">
-              <input
-                v-model="point.name"
-                id="pointName"
-                class="form-control mb-2"
-              />
-            </div>
+        <div class="form-group row">
+          <label
+            for="pointName"
+            class="col-2 col-form-label"
+            >Name</label
+          >
+          <div class="col">
+            <input
+              v-model="point.name"
+              id="pointName"
+              class="form-control mb-2"
+            />
           </div>
-          <div class="form-group row">
-            <label
-              for="pointX"
-              class="col-2 col-form-label"
-              >X Value</label
-            >
-            <div class="col">
-              <input
-                v-model="point.x"
-                onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
-                type="number"
-                id="pointX"
-                class="form-control mb-2"
-              />
-            </div>
+        </div>
+        <div class="form-group row">
+          <label
+            for="pointX"
+            class="col-2 col-form-label"
+            >X Value</label
+          >
+          <div class="col">
+            <input
+              v-model="point.x"
+              onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ||
+                                (event.key === '-' && event.target.value.length === 0) 
+                                ? true 
+                                : !isNaN(Number(event.key)) && event.code !== 'Space'"
+              id="pointX"
+              class="form-control mb-2"
+            />
           </div>
-          <div class="form-group row">
-            <label
-              for="pointY"
-              class="col-2 col-form-label"
-              >Y Value</label
-            >
-            <div class="col">
-              <input
-                v-model="point.y"
-                onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
-                type="number"
-                id="pointY"
-                class="form-control mb-2"
-              />
-            </div>
+        </div>
+        <div class="form-group row">
+          <label
+            for="pointY"
+            class="col-2 col-form-label"
+            >Y Value</label
+          >
+          <div class="col">
+            <input
+              v-model="point.y"
+              onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ||
+                                (event.key === '-' && event.target.value.length === 0) 
+                                ? true 
+                                : !isNaN(Number(event.key)) && event.code !== 'Space'"
+              id="pointY"
+              class="form-control mb-2"
+            />
           </div>
+        </div>
 
-        <div style="display: flexbox;">
+        <div style="display: flexbox">
           <button
             type="submit"
             class="btn btn-primary"
