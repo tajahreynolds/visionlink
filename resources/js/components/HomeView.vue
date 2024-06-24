@@ -6,7 +6,8 @@
     <div v-else-if="error" class="mt-5 text-center text-danger">{{ error }}</div>
     <div v-else>
       <h1 class="mt-5 text-center">Points</h1>
-      <points-table :points="points" :editable="true"></points-table>
+      <points-table v-if="points.length > 0" :points="points" :editable="true"></points-table>
+      <h2 v-else class="text-center">There are no points in the database.</h2>
       <button v-on:click="gotoNewPointView" class="btn btn-primary">New</button>
     </div>
   </div>
