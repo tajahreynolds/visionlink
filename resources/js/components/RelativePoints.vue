@@ -1,13 +1,49 @@
 <template>
-  <div>
-    <div v-if="calculating || loading">
-        Calculating relative points...
+  <div style="margin-top: 24px">
+    <div
+      v-if="loading"
+      class="d-flex justify-content-center align-content-center"
+    >
+      <div class="spinner-border mt-5"></div>
     </div>
+
+    <div
+      v-else-if="error"
+      class="mt-5 text-center text-danger"
+    >
+      {{ error }}
+    </div>
+
+    <div
+      v-else-if="invalid"
+      class="mt-5 text-center text-danger"
+    >
+      Can not calculate distance from the given point.
+    </div>
+
+    <div v-else-if="otherPoints.length > 0">
+      <h2 class="text-center">
+        Nearest Point<span v-if="relative.nearestPoints.length > 1">s</span> at
+        distance {{ relative.minDistance }}
+      </h2>
+      <points-table
+        :points="relative.nearestPoints"
+        :editable="false"
+      ></points-table>
+      <br />
+
+      <h2 class="text-center">
+        Farthest Point<span v-if="relative.farthestPoints.length > 1">s</span>
+        at distance {{ relative.maxDistance }}
+      </h2>
+      <points-table
+        :points="relative.farthestPoints"
+        :editable="false"
+      ></points-table>
+    </div>
+    
     <div v-else>
-        <h2>Nearest Points at distance {{ relative.minDistance }}</h2>
-        <p v-for="near in relative.nearestPoints">{{ near }}</p>
-        <h2>Farthest Points at distance {{ relative.maxDistance }}</h2>
-        <p v-for="far in relative.farthestPoints">{{ far }}</p>
+      <h2 class="text-center">No Other Points Exist</h2>
     </div>
   </div>
 </template>
@@ -25,9 +61,16 @@ export default {
     };
   },
   computed: {
-    calculating: function () {
-        return (this.point.x === "" || isNaN(Number(this.point.x)) || this.point.x === null)
-            || (this.point.y === "" || isNaN(Number(this.point.y)) || this.point.y === null);
+    invalid: function () {
+      return (
+        this.point === null ||
+        this.point.x === "" ||
+        this.point.y === "" ||
+        this.point.x === null ||
+        this.point.y === null ||
+        isNaN(Number(this.point.x)) ||
+        isNaN(Number(this.point.y))
+      );
     },
     relative: function () {
       let minDistance = Number.MAX_SAFE_INTEGER;
@@ -37,7 +80,7 @@ export default {
 
       this.otherPoints.forEach((other) => {
         let distance = this.distanceBetween(this.point, other);
-        
+
         if (distance < minDistance) {
           minDistance = distance;
           nearestPoints = [other]; // reset the array with the new nearest point
@@ -66,6 +109,11 @@ export default {
   },
   methods: {
     async fetchOtherPoints() {
+      if (!this.point) {
+        this.error = "Invalid Point";
+        this.loading = false;
+        return;
+      }
       this.loading = true;
       this.error = null;
       axios
