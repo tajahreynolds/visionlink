@@ -59,7 +59,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            :disabled="!formIsUpdated"
+            :disabled="!formIsUpdated || dataInvalid"
           >
             Save
           </button>
@@ -89,7 +89,7 @@
           </button>
         </div>
       </form>
-      <relative-points :point="point"></relative-points>
+      <relative-points :point="point" v-on:loaded-other-points="otherPoints = $event"></relative-points>
     </div>
   </div>
 </template>
@@ -105,16 +105,39 @@ export default {
     return {
       point: null,
       originalPoint: null,
+      otherPoints: null,
       loading: true,
       error: null,
     };
   },
   computed: {
+    dataInvalid: function () {
+      if (!this.otherPoints) {
+        return false;
+      }
+      let nameTaken = false;
+      this.otherPoints.forEach(other => {
+        if (this.point.name === other.name) {
+          nameTaken = true;
+        }
+      });
+      return (
+        this.point === null ||
+        this.point.x === null ||
+        this.point.y === null ||
+        this.point.x === "" ||
+        this.point.y === "" ||
+        isNaN(Number(this.point.x)) ||
+        isNaN(Number(this.point.y)) ||
+        this.point.name === "" ||
+        nameTaken
+      );
+    },
     formIsUpdated: function () {
       return (
-        this.point.x != this.originalPoint.x ||
-        this.point.y != this.originalPoint.y ||
-        this.point.name != this.originalPoint.name
+        this.point.x !== this.originalPoint.x ||
+        this.point.y !== this.originalPoint.y ||
+        this.point.name !== this.originalPoint.name
       );
     },
   },
