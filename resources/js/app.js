@@ -6,9 +6,6 @@
 import VueRouter from "vue-router";
 import axios from "axios";
 import "./bootstrap";
-import HomeView from "./components/HomeView.vue";
-import EditPointView from "./components/EditPointView.vue";
-import NewPointView from "./components/NewPointView.vue";
 
 window.Vue = require("vue").default;
 Vue.use(VueRouter);
@@ -28,15 +25,9 @@ Vue.component(
   require("./components/RelativePoints.vue").default
 );
 
-Vue.component(
-  "points-table",
-  require("./components/PointsTable.vue").default
-)
+Vue.component("points-table", require("./components/PointsTable.vue").default);
 
-Vue.component(
-  "point-form",
-  require("./components/PointForm.vue").default
-)
+Vue.component("point-form", require("./components/PointForm.vue").default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -46,9 +37,19 @@ Vue.component(
 const router = new VueRouter({
   mode: "history",
   routes: [
-    { path: "/", component: HomeView },
-    { path: "/point/:id", name: "EditPoint", component: EditPointView, props: true },
-    { path: "/newPoint", name: "NewPoint", component: NewPointView },
+    { path: "/", name: "Home", component: () => import("./components/HomeView.vue") },
+    {
+      path: "/newPoint",
+      name: "NewPoint",
+      component: () => import("./components/NewPointView.vue"),
+    },
+    {
+      path: "/point/:id",
+      name: "EditPoint",
+      component: () => import("./components/EditPointView.vue"),
+      props: true,
+    },
+    { path: "*", component: () => import("./components/PageNotFoundView.vue") },
   ],
 });
 
