@@ -6,8 +6,10 @@
     >
       <div class="spinner-grow mt-5"></div>
     </div>
+
     <div v-else>
       <h1 class="text-center mt-5">Create Point</h1>
+
       <div v-if="error">
         <p class="text-danger">{{ error.message }}</p>
         <p
@@ -17,6 +19,7 @@
           {{ err[0] }}
         </p>
       </div>
+
       <form @submit.prevent="createPoint">
         <div style="display: flex; flex-direction: column">
           <label
@@ -31,7 +34,6 @@
             id="pointName"
           />
           <br />
-
           <label
             for="pointX"
             class="form-label"
@@ -39,12 +41,12 @@
           >
           <input
             v-model="point.x"
+            type="number"
             placeholder="new point x value"
             class="form-control"
             id="pointX"
           />
           <br />
-
           <label
             for="pointY"
             class="form-label"
@@ -52,19 +54,22 @@
           >
           <input
             v-model="point.y"
+            type="number"
             placeholder="new point y value"
             class="form-control"
             id="pointY"
           />
         </div>
+
         <div style="display: flexbox; margin-top: 8px">
           <button
             type="submit"
-            :disabled="!formIsUpdated"
+            :disabled="!formIsUpdated || dataInvalid"
             class="btn btn-primary"
           >
             Save
           </button>
+
           <button
             type="button"
             v-on:click="cancel"
@@ -73,6 +78,7 @@
           >
             Cancel
           </button>
+
           <button
             type="button"
             :disabled="!formIsUpdated"
@@ -84,25 +90,55 @@
           </button>
         </div>
       </form>
-      <relative-points :point="point"></relative-points>
+
+      <relative-points
+        :point="point"
+        v-on:loaded-other-points="otherPoints = $event"
+      ></relative-points>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       point: { name: null, x: null, y: null },
+      otherPoints: null,
       loading: false,
       error: null,
     };
   },
   computed: {
-    formIsUpdated: function () {
+    dataInvalid: function () {
+      if (!this.otherPoints) {
+        return true;
+      }
+      let nameIsTaken = false;
+      this.otherPoints.forEach((other) => {
+        if (this.point.name === other.name) {
+          nameIsTaken = true;
+        }
+      });
+      console.log(Number.isInteger(Number(this.point.x)));
       return (
-        this.point.name || this.point.x || this.point.y
+        this.point === null ||
+        this.point.x === null ||
+        this.point.y === null ||
+        this.point.x === "" ||
+        this.point.y === "" ||
+        isNaN(Number(this.point.x)) ||
+        isNaN(Number(this.point.y)) ||
+        !Number.isInteger(Number(this.point.x)) ||
+        !Number.isInteger(Number(this.point.y)) ||
+        this.point.name === "" ||
+        nameIsTaken
       );
+    },
+    formIsUpdated: function () {
+      return this.point.name || this.point.x || this.point.y;
     },
   },
   methods: {
@@ -112,21 +148,21 @@ export default {
       axios
         .post(`http://localhost:8000/api/points`, this.point)
         .catch((err) => {
-          console.error(err);
           this.error = err.response.data;
         })
         .finally(() => {
           this.loading = false;
-          !this.error && this.$router.push("/");
+          if (this.error === null) {
+            this.$router.push("/");
+          } 
         });
     },
     cancel() {
       this.$router.push("/");
     },
     reset() {
-      this.point = {name: null, x: null, y: null};
-    }
-    ,
+      this.point = { name: null, x: null, y: null };
+    },
   },
 };
 </script>

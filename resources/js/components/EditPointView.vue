@@ -6,8 +6,10 @@
     >
       <div class="spinner-grow mt-5"></div>
     </div>
+
     <div v-else>
       <h1 class="text-center mt-5">Edit Point</h1>
+
       <div v-if="error">
         <p class="text-danger">{{ error.message }}</p>
         <p
@@ -17,6 +19,7 @@
           {{ err[0] }}
         </p>
       </div>
+      
       <form
         v-if="point"
         @submit.prevent="savePoint"
@@ -40,6 +43,7 @@
           >
           <input
             v-model="point.x"
+            type="number"
             id="pointX"
             class="form-control"
           />
@@ -51,10 +55,12 @@
           >
           <input
             v-model="point.y"
+            type="number"
             id="pointY"
             class="form-control"
           />
         </div>
+
         <div style="display: flexbox; margin-top: 8px">
           <button
             type="submit"
@@ -63,6 +69,7 @@
           >
             Save
           </button>
+
           <button
             type="button"
             v-on:click="deletePoint"
@@ -70,6 +77,7 @@
           >
             Delete
           </button>
+
           <button
             type="button"
             v-on:click="cancel"
@@ -78,6 +86,7 @@
           >
             Cancel
           </button>
+
           <button
             type="button"
             v-on:click="reset"
@@ -89,7 +98,11 @@
           </button>
         </div>
       </form>
-      <relative-points :point="point" v-on:loaded-other-points="otherPoints = $event"></relative-points>
+
+      <relative-points
+        :point="point"
+        v-on:loaded-other-points="otherPoints = $event"
+      ></relative-points>
     </div>
   </div>
 </template>
@@ -113,12 +126,12 @@ export default {
   computed: {
     dataInvalid: function () {
       if (!this.otherPoints) {
-        return false;
+        return true;
       }
-      let nameTaken = false;
-      this.otherPoints.forEach(other => {
+      let nameIsTaken = false;
+      this.otherPoints.forEach((other) => {
         if (this.point.name === other.name) {
-          nameTaken = true;
+          nameIsTaken = true;
         }
       });
       return (
@@ -129,8 +142,10 @@ export default {
         this.point.y === "" ||
         isNaN(Number(this.point.x)) ||
         isNaN(Number(this.point.y)) ||
+        !Number.isInteger(Number(this.point.x)) ||
+        !Number.isInteger(Number(this.point.y)) ||
         this.point.name === "" ||
-        nameTaken
+        nameIsTaken
       );
     },
     formIsUpdated: function () {
@@ -204,3 +219,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove arrows for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+</style>
