@@ -4,7 +4,7 @@
         :loading="loading" 
         :error="error" 
         :point="point" 
-        :originalPoint="{ name: null, x: null, y: null }"
+        :originalPoint="{ name: '', x: '', y: '' }"
         :onSubmit="createPoint" 
         :onReset="reset"
         :enableDelete="false"
@@ -16,7 +16,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      point: { name: null, x: null, y: null },
+      point: { name: '', x: '', y: '' },
       loading: false,
       error: null,
     };
@@ -38,9 +38,7 @@ export default {
         });
     },
     reset() {
-      console.log(this.point)
       this.point = { name: null, x: null, y: null };
-      console.log(this.point)
     },
   },
 };
