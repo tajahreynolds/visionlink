@@ -48,7 +48,7 @@
             <input
               v-model="point.x"
               onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ||
-                                (event.key === '-' && event.target.value.length === 0) 
+                                (event.key === '-' && !event.target.value.includes('-')) 
                                 ? true 
                                 : !isNaN(Number(event.key)) && event.code !== 'Space'"
               id="pointX"
@@ -66,7 +66,7 @@
             <input
               v-model="point.y"
               onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight', 'Tab'].includes(event.code) ||
-                                (event.key === '-' && event.target.value.length === 0) 
+                                (event.key === '-' && !event.target.value.includes('-')) 
                                 ? true 
                                 : !isNaN(Number(event.key)) && event.code !== 'Space'"
               id="pointY"
